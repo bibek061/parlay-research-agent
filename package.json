@@ -1,0 +1,18 @@
+{
+  "name": "parlay-research-agent",
+  "version": "0.2.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "dev:daily": "node --env-file-if-exists=.env.local scripts/dev-daily.mjs",
+    "schedule": "node --env-file-if-exists=.env.local scripts/scheduler.mjs",
+    "research": "node --env-file-if-exists=.env.local scripts/scheduler.mjs --once",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts"
+  },
+  "dependencies": { "next": "^15.3.0", "react": "^19.0.0", "react-dom": "^19.0.0" },
+  "devDependencies": { "typescript": "^5.8.0", "tsx": "^4.20.0", "@types/node": "^22.0.0", "@types/react": "^19.0.0", "@types/react-dom": "^19.0.0" }
+}

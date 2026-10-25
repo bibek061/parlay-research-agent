@@ -1,0 +1,29 @@
+name: Daily research
+on:
+  schedule:
+    - cron: '0 12,13 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: daily-research
+  cancel-in-progress: false
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run at 8 AM Eastern, including daylight saving time
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RESEARCH_URL: ${{ secrets.RESEARCH_URL }}
+          RESEARCH_API_TOKEN: ${{ secrets.RESEARCH_API_TOKEN }}
+        run: |
+          if [ "$EVENT_NAME" = "schedule" ] && [ "$(TZ=America/New_York date +%H)" != "08" ]; then
+            exit 0
+          fi
+          if [ -z "$RESEARCH_URL" ] || [ -z "$RESEARCH_API_TOKEN" ]; then
+            echo "Skipping: configure RESEARCH_URL and RESEARCH_API_TOKEN for a hosted app."
+            exit 0
+          fi
+          curl --fail-with-body --max-time 90 -X POST "$RESEARCH_URL/api/research" \
+            -H "Authorization: Bearer $RESEARCH_API_TOKEN"
